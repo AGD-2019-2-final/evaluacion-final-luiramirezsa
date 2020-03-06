@@ -27,5 +27,7 @@
 -- 
 fs -rm -f -r output;
 --
-
+lines = LOAD 'data.csv' USING PigStorage(',') AS (Id:INT, Nombre:CHARARRAY, Apellido:CHARARRAY, Fecha:CHARARRAY, Color:CHARARRAY, N:INT);
+emails = FOREACH lines GENERATE CONCAT(Nombre, '@', Apellido);
+STORE emails INTO 'output';
 

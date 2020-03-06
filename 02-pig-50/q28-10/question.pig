@@ -29,4 +29,7 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
-
+date_results = FOREACH u GENERATE GetYear(ToDate(birthday,'YYYY-MM-DD')) AS birthday;
+results = FOREACH date_results GENERATE CONCAT((CHARARRAY)birthday, ',',SUBSTRING((CHARARRAY)birthday, 2, 4));
+results = LIMIT results 5;
+STORE results INTO 'output';

@@ -33,3 +33,6 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+apellidos_filter = FILTER u BY SUBSTRING(surname, 0, 1) MATCHES '^[d-kD-K]';
+result = FOREACH apellidos_filter GENERATE surname;
+STORE result INTO 'output';

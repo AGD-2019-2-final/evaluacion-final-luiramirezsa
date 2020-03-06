@@ -26,3 +26,9 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+lines = LOAD 'data.csv' USING PigStorage(',') AS (Id:INT, Nombre:CHARARRAY, Apellido:CHARARRAY, Fecha:CHARARRAY, N:INT);
+longitud_apellidos = FOREACH lines GENERATE Apellido, SIZE(Apellido) AS longitud;
+apellidos_ordenados = ORDER longitud_apellidos BY longitud DESC, Apellido ASC;
+result = FOREACH apellidos_ordenados GENERATE CONCAT(Apellido, ',', (CHARARRAY)longitud);
+result = LIMIT result 5;
+STORE result INTO 'output';

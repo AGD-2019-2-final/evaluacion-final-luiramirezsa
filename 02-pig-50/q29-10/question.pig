@@ -40,3 +40,31 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+date_results = FOREACH u GENERATE birthday, ToString(ToDate(birthday,'yyyy-MM-dd', 'America/Bogota'), 'yyyy-MMM-dd') AS birthday2, ToDate(birthday,'yyyy-MM-dd') AS birthday3;
+results = FOREACH date_results GENERATE 
+    birthday AS date1 ,
+    (
+        CASE REGEX_EXTRACT(birthday2, '(.*)-(.*)-(.*)', 2)
+            WHEN 'Jan' THEN 'ene'
+            WHEN 'Feb' THEN 'feb'
+            WHEN 'Mar' THEN 'mar'
+            WHEN 'Apr' THEN 'abr'
+            WHEN 'May' THEN 'may'
+            WHEN 'Jun' THEN 'jun'
+            WHEN 'Jul' THEN 'jul'
+            WHEN 'Aug' THEN 'ago'
+            WHEN 'Sep' THEN 'sep'
+            WHEN 'Oct' THEN 'oct'
+            WHEN 'Nov' THEN 'nov'
+            WHEN 'Dec' THEN 'dic'
+        END
+    ) AS date2, 
+    (
+        CASE SIZE((CHARARRAY)GetMonth(birthday3)) 
+            WHEN 1 THEN CONCAT('0', (CHARARRAY)GetMonth(birthday3))
+            WHEN 2 THEN (CHARARRAY)GetMonth(birthday3)
+        END
+    ) AS date3,
+    (CHARARRAY)GetMonth(birthday3) AS date4;
+results = FOREACH results GENERATE CONCAT(date1, ',', date2, ',', date3, ',', date4);
+STORE results INTO 'output';

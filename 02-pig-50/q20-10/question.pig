@@ -28,3 +28,6 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+filter_results = FILTER u BY color MATCHES '^[^b].*';
+results = FOREACH filter_results GENERATE CONCAT(firstname, ',', color);
+STORE results INTO 'output';

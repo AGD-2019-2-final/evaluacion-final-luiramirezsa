@@ -8,5 +8,8 @@ fs -rm -f -r output;
 -- 
 --  >>> Escriba el codigo del mapper a partir de este punto <<<
 -- 
+lines = LOAD 'data.tsv' AS (letra:CHARARRAY, fecha:CHARARRAY, valor:INT);
+result = ORDER lines BY letra ASC, valor ASC;
+STORE result INTO 'output';
 
 

@@ -11,4 +11,9 @@ fs -rm -f -r output;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+lines = LOAD 'data.tsv' AS (letra:CHARARRAY, smallLetraBag:BAG{l: TUPLE(sl:CHARARRAY)});
+single_letras = FOREACH lines GENERATE FLATTEN(smallLetraBag) AS letras;
+grouped = GROUP single_letras BY letras;
+letras_count = FOREACH grouped GENERATE group, COUNT(single_letras);
+STORE letras_count INTO 'output';
 

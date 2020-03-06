@@ -38,3 +38,6 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+apellidos = ORDER u BY surname ASC;
+result = FOREACH apellidos GENERATE CONCAT(surname, ',', UPPER(surname),',', LOWER(surname));
+STORE result INTO 'output';
